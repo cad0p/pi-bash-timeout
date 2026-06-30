@@ -82,6 +82,16 @@ This repo uses [`cad0p/semver-calver-release`](https://github.com/cad0p/semver-c
 - Curated release PRs from `release/from-v*` branches bump the base `package.json` version and publish stable npm releases.
 - npm publishing uses GitHub OIDC / npm trusted publishing via `.github/workflows/release.yml` (`id-token: write`) and `publishConfig.access: public`.
 
+### One-time: enable npm trusted publishing
+
+Before the first `npm publish` from CI can succeed, the package must be linked to the GitHub workflow as a trusted publisher. This requires 2FA and must be run locally by the `@cad0p` scope owner:
+
+```bash
+npm trust github @cad0p/pi-bash-timeout --file release.yml --repository cad0p/pi-bash-timeout --yes
+```
+
+Then re-run the failed publish job (or push an empty commit to `main`) to publish the pending `v0.1.0`.
+
 ## License
 
 MIT © Pier Carlo Cadoppi

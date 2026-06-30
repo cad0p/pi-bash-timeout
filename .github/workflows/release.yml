@@ -29,6 +29,35 @@ jobs:
       contents: read
       id-token: write
     steps:
-      - uses: cad0p/semver-calver-release/npm-publish@v1
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
-          tag: v${{ needs.release.outputs.version }}
+          node-version: lts/*
+          registry-url: https://registry.npmjs.org
+      - name: Compute version from tag
+        id: version
+        shell: bash
+        run: |
+          TAG="v${{ needs.release.outputs.version }}"
+          VERSION="${TAG#v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Publishing version: $VERSION"
+          jq --indent 2 --arg v "$VERSION" '.version = $v' package.json > package.json.tmp
+          mv package.json.tmp package.json
+      - run: npm install
+      - name: Publish to npm
+        shell: bash
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          VERSION="${{ steps.version.outputs.version }}"
+          PACKAGE=$(jq -r '.name' package.json)
+          if npm view "$PACKAGE@$VERSION" version &>/dev/null; then
+            echo "::notice::Version $VERSION already published to npm, skipping"
+            exit 0
+          fi
+          if echo "$VERSION" | grep -q '-'; then
+            npm publish --access public --tag next
+          else
+            npm publish --access public
+          fi
