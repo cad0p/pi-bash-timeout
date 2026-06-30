@@ -11,6 +11,11 @@ All notable changes to this project will be documented in this file.
 ### 📚 Documentation
 
 - Add one-time npm trusted publishing setup instructions ([#1](https://github.com/cad0p/pi-bash-timeout/pull/1))
+- Note npm >=11.15 + --allow-publish requirement for trusted publishing ([#2](https://github.com/cad0p/pi-bash-timeout/pull/2))
+
+### ⚙️ Miscellaneous Tasks
+
+- Switch from bun to node + pnpm for local dev and CI ([#3](https://github.com/cad0p/pi-bash-timeout/pull/3))
 
 
 ## [0.1.0] - 2026-06-30
