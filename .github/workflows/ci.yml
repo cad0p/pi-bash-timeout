@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+        with:
+          # Pinned to the contributor-machine version so a bun-internal
+          # release regression (test runner, fs API, bun:test semantics)
+          # can't break CI without an explicit bump in this repo.
+          # Bump deliberately when a new bun release ships something useful.
+          bun-version: 1.3.13
+      - run: bun install
+      - name: Lint
+        run: bunx biome check extensions/
+      - name: Type check
+        run: bunx tsc --noEmit
