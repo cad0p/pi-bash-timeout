@@ -14,16 +14,20 @@ jobs:
       matrix:
         os: [ubuntu-latest, macos-latest]
     steps:
-      - uses: actions/checkout@v4
-      - uses: oven-sh/setup-bun@v2
+      - uses: actions/checkout@v7
+      - uses: pnpm/action-setup@v6
         with:
-          # Pinned to the contributor-machine version so a bun-internal
-          # release regression (test runner, fs API, bun:test semantics)
-          # can't break CI without an explicit bump in this repo.
-          # Bump deliberately when a new bun release ships something useful.
-          bun-version: 1.3.13
-      - run: bun install
+          # Floating major so we pick up pnpm 11.x security/patch releases
+          # automatically (11.5.2, 11.6.0, 11.8.0 each shipped security
+          # fixes). A major bump (12) would be an explicit change. pnpm's
+          # installer/lockfile format is stable within a major.
+          version: 11
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
       - name: Lint
-        run: bunx biome check extensions/
+        run: ./node_modules/.bin/biome check extensions/
       - name: Type check
-        run: bunx tsc --noEmit
+        run: ./node_modules/.bin/tsc --noEmit
