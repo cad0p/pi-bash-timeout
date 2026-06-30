@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
+## [calver-released]
+
+<!-- USER-EDITABLE SECTION START -->
+<!-- Add your curated release notes here. -->
+<!-- USER-EDITABLE SECTION END -->
+
+### 📚 Documentation
+
+- Add one-time npm trusted publishing setup instructions ([#1](https://github.com/cad0p/pi-bash-timeout/pull/1))
+
+
 ## [0.1.0] - 2026-06-30
 
 <!-- USER-EDITABLE SECTION START -->
