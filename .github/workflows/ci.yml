@@ -28,6 +28,6 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - name: Lint
-        run: pnpm lint
+        run: ./node_modules/.bin/biome check extensions/
       - name: Type check
-        run: pnpm typecheck
+        run: ./node_modules/.bin/tsc --noEmit
